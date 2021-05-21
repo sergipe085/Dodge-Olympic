@@ -16,20 +16,24 @@ namespace Controllers
         [SerializeField] private float speed = 5f;
         [SerializeField] private float acelleration = 10f;
         [SerializeField] private float jumpForce = 5f;
+        private bool land = false;
 
         [Header("COMPONENTS")]
-        private Rigidbody rig = null;
+        private Rigidbody rig       = null;
+        private ScaleFeel scaleFeel = null;
 
         #region MonoBehaviour
 
         private void Awake() {
-            rig = GetComponent<Rigidbody>();
+            rig       = GetComponent<Rigidbody>();
+            scaleFeel = GetComponentInChildren<ScaleFeel>();
         }
 
         private void Update() {
             CaptureInput();
             HandleInput(curInput);
             ExtraGravity();
+            Land();
         }
 
         private void FixedUpdate() {
@@ -79,6 +83,19 @@ namespace Controllers
                 curInput.jump = false;
                 rig.velocity = new Vector3(rig.velocity.x, 0f, rig.velocity.z);
                 rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+                scaleFeel?.ChangeScale(new Vector3(-0.6f, 0.6f, -0.6f));
+            }
+        }
+
+        private void Land() {
+            if (rig.velocity.y <= -0.2f && IsGrounded() && !land) {
+                land = true;
+                scaleFeel?.ChangeScale(new Vector3(0.6f, -0.6f, 0.6f));
+            }
+
+            if (!IsGrounded()) {
+                land = false;
             }
         }
 
