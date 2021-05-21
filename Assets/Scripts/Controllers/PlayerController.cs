@@ -8,10 +8,13 @@ namespace Controllers
     public class PlayerController : MonoBehaviour 
     {   
         [Header("CORE")]
-        [SerializeField] private float speed = 5f;
-        [SerializeField] private float jumpForce = 5f;
         [SerializeField] private float gravity = 5f;
         private PlayerInput curInput = new PlayerInput();
+
+        [Header("LOCOMOTION")]
+        [SerializeField] private float speed = 5f;
+        [SerializeField] private float acelleration = 10f;
+        [SerializeField] private float jumpForce = 5f;
 
         [Header("COMPONENTS")]
         private Rigidbody rig = null;
@@ -49,11 +52,12 @@ namespace Controllers
 
         private void Move(float _xMove) {
             Vector3 desiredVelocity = new Vector3(_xMove * speed, rig.velocity.y, 0f);
-            rig.velocity = Vector2.Lerp(rig.velocity, desiredVelocity, 5f * Time.deltaTime);
+            rig.velocity = Vector2.Lerp(rig.velocity, desiredVelocity, acelleration * Time.deltaTime);
         }
 
         private void Jump(bool jump) {
             if (jump) {
+                rig.velocity = new Vector3(rig.velocity.x, 0f, rig.velocity.z);
                 rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
         }
