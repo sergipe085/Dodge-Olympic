@@ -59,7 +59,7 @@ namespace Controllers
         private void CheckJump(Collider other) {
             JumpPoint point = other.GetComponent<JumpPoint>();
             if (point) {
-                StartCoroutine(JumpTest(point, point.jumpDuration));
+                StartCoroutine(JumpTest(transform.position, point.end.position, point.jumpDuration));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Controllers
         #region Input
 
         private PlayerInput CaptureInput() {
-            curInput.xMove = Input.GetAxisRaw("Horizontal");
+            curInput.xMove = -FindObjectOfType<Joystick>().position.x;
 
             return curInput;
         }
@@ -102,9 +102,7 @@ namespace Controllers
             rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
 
-        private IEnumerator JumpTest(JumpPoint point, float duration) {
-            Vector3 start = transform.position;
-            Vector3 end   = point.end.position;
+        private IEnumerator JumpTest(Vector3 start, Vector3 end, float duration) {
             Vector3 pos;
             float time = 0f;
             DisableInput();
