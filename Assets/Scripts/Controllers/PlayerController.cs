@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mechanics;
 
 namespace Controllers 
 {
@@ -13,31 +14,38 @@ namespace Controllers
         private PlayerInput curInput = new PlayerInput();
 
         [Header("LOCOMOTION")]
-        [SerializeField] private float speed = 5f;
-        [SerializeField] private float acelleration = 10f;
-        [SerializeField] private float jumpForce = 5f;
+        [SerializeField] private float          speed        = 5f;
+        [SerializeField] private float          acelleration = 10f;
+        [SerializeField] private float          jumpForce    = 5f;
+        [SerializeField] private AnimationCurve jumpCurve    = new AnimationCurve();
         private bool land = false;
+        private bool canInput = true;
 
         [Header("COMPONENTS")]
         private Rigidbody rig       = null;
-        private ScaleFeel scaleFeel = null;
 
         #region MonoBehaviour
 
         private void Awake() {
             rig       = GetComponent<Rigidbody>();
-            scaleFeel = GetComponentInChildren<ScaleFeel>();
         }
 
         private void Update() {
+            if (!canInput) return;
+
             CaptureInput();
-            HandleInput(curInput);
             ExtraGravity();
             Land();
         }
 
         private void FixedUpdate() {
+            if (!canInput) return;
+
             HandleFixedInput(curInput);
+        }
+
+        void OnTriggerEnter(Collider other) {
+            CheckJump(other);
         }
 
         #endregion
@@ -48,25 +56,33 @@ namespace Controllers
             return Physics.Raycast(feet.position, Vector3.down, 0.6f);
         }
 
+        private void CheckJump(Collider other) {
+            JumpPoint point = other.GetComponent<JumpPoint>();
+            if (point) {
+                StartCoroutine(JumpTest(point, point.jumpDuration));
+            }
+        }
+
         #endregion
 
         #region Input
 
         private PlayerInput CaptureInput() {
             curInput.xMove = Input.GetAxisRaw("Horizontal");
-            if (Input.GetButtonDown("Jump")) {
-                StartCoroutine(BetterJump());
-            }
 
             return curInput;
         }
 
-        private void HandleInput(PlayerInput input) {
-            Jump(input.jump);
-        }
-
         private void HandleFixedInput(PlayerInput input) {
             Move(input.xMove);
+        }
+
+        public void DisableInput() {
+            canInput = false;
+        }
+
+        public void EnableInput() {
+            canInput = true;
         }
 
         #endregion
@@ -82,30 +98,39 @@ namespace Controllers
         }
 
         private void Jump(bool jump) {
-            if (jump && IsGrounded()) {
-                curInput.jump = false;
-                rig.velocity = new Vector3(rig.velocity.x, 0f, rig.velocity.z);
-                rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rig.velocity = new Vector3(rig.velocity.x, 0f, rig.velocity.z);
+            rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
 
-                scaleFeel?.ChangeScale(new Vector3(-0.6f, 0.6f, -0.6f));
+        private IEnumerator JumpTest(JumpPoint point, float duration) {
+            Vector3 start = transform.position;
+            Vector3 end   = point.end.position;
+            Vector3 pos;
+            float time = 0f;
+            DisableInput();
+
+            yield return new WaitForFixedUpdate();
+
+            while(time <= duration) {
+                float t = time/duration;
+                pos = Vector3.Lerp(start, end, t) + jumpCurve.Evaluate(t) * Vector3.up;
+                transform.position = pos;
+                time += Time.deltaTime;
+                yield return null;
             }
+
+            EnableInput();
         }
 
         private void Land() {
             if (rig.velocity.y <= -0.2f && IsGrounded() && !land) {
                 land = true;
-                scaleFeel?.ChangeScale(new Vector3(0.6f, -0.6f, 0.6f));
+                //land
             }
 
             if (!IsGrounded()) {
                 land = false;
             }
-        }
-
-        private IEnumerator BetterJump() {
-            curInput.jump = true;
-            yield return new WaitForSeconds(0.8f);
-            curInput.jump = false;
         }
 
         private void ExtraGravity() {
@@ -117,6 +142,5 @@ namespace Controllers
 
     public struct PlayerInput {
         public float xMove;
-        public bool jump;
     }
 }

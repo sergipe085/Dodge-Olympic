@@ -22,8 +22,7 @@ namespace Controllers
             }
         }
 
-        private void LateUpdate()
-        {
+        private void LateUpdate() {
             FollowTarget(player.transform);
         }
 
