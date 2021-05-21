@@ -8,7 +8,8 @@ namespace Controllers
     public class PlayerController : MonoBehaviour 
     {   
         [Header("CORE")]
-        [SerializeField] private float gravity = 5f;
+        [SerializeField] private float     gravity = 5f;
+        [SerializeField] private Transform feet    = null;
         private PlayerInput curInput = new PlayerInput();
 
         [Header("LOCOMOTION")]
@@ -37,11 +38,21 @@ namespace Controllers
 
         #endregion
 
+        #region Core
+
+        private bool IsGrounded() {
+            return Physics.Raycast(feet.position, Vector3.down, 0.6f);
+        }
+
+        #endregion
+
         #region Input
 
         private PlayerInput CaptureInput() {
             curInput.xMove = Input.GetAxisRaw("Horizontal");
-            curInput.jump  = Input.GetButtonDown("Jump");
+            if (Input.GetButtonDown("Jump")) {
+                StartCoroutine(BetterJump());
+            }
 
             return curInput;
         }
@@ -64,10 +75,17 @@ namespace Controllers
         }
 
         private void Jump(bool jump) {
-            if (jump) {
+            if (jump && IsGrounded()) {
+                curInput.jump = false;
                 rig.velocity = new Vector3(rig.velocity.x, 0f, rig.velocity.z);
                 rig.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             }
+        }
+
+        private IEnumerator BetterJump() {
+            curInput.jump = true;
+            yield return new WaitForSeconds(0.8f);
+            curInput.jump = false;
         }
 
         private void ExtraGravity() {
