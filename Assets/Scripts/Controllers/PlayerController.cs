@@ -76,6 +76,9 @@ namespace Controllers
         private void Move(float _xMove) {
             Vector3 desiredVelocity = new Vector3(_xMove * speed, rig.velocity.y, 0f);
             rig.velocity = Vector2.Lerp(rig.velocity, desiredVelocity, acelleration * Time.deltaTime);
+
+            float rotation = rig.velocity.x > 0 ? 90 : rig.velocity.x == 0 ? transform.eulerAngles.y: -90;
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, rotation, 0f), 10f * Time.deltaTime); 
         }
 
         private void Jump(bool jump) {
