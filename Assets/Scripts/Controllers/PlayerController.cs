@@ -24,11 +24,13 @@ namespace Controllers
 
         [Header("COMPONENTS")]
         private Rigidbody rig       = null;
+        private Animator  animator  = null;
 
         #region MonoBehaviour
 
         private void Awake() {
             rig       = GetComponent<Rigidbody>();
+            animator  = GetComponentInChildren<Animator>();
         }
 
         private void Update() {
@@ -96,6 +98,8 @@ namespace Controllers
 
             float rotation = rig.velocity.x > 0 ? 90 : rig.velocity.x == 0 ? transform.eulerAngles.y: -90;
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0f, rotation, 0f), 10f * Time.deltaTime); 
+            
+            animator.SetBool("run", _xMove != 0);
         }
 
         private void Jump(bool jump) {
@@ -116,7 +120,7 @@ namespace Controllers
                 float t = time/duration;
                 pos = Vector3.Lerp(start, end, t) + jumpCurve.Evaluate(t) * Vector3.up;
                 transform.position = pos;
-                time += Time.fixedDeltaTime;
+                time += Time.deltaTime;
                 yield return null;
             }
 
