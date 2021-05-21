@@ -20,6 +20,7 @@ namespace Controllers
         [SerializeField] private AnimationCurve jumpCurve    = new AnimationCurve();
         private bool land = false;
         private bool canInput = true;
+        private bool jumping = false;
 
         [Header("COMPONENTS")]
         private Rigidbody rig       = null;
@@ -58,7 +59,7 @@ namespace Controllers
 
         private void CheckJump(Collider other) {
             JumpPoint point = other.GetComponent<JumpPoint>();
-            if (point) {
+            if (point && !jumping) {
                 StartCoroutine(JumpTest(transform.position, point.end.position, point.jumpDuration));
             }
         }
@@ -107,6 +108,7 @@ namespace Controllers
             float time = 0f;
             DisableInput();
             CameraController.instance.jumping = true;
+            jumping = true;
 
             yield return new WaitForFixedUpdate();
 
@@ -120,6 +122,7 @@ namespace Controllers
 
             EnableInput();
             CameraController.instance.jumping = false;
+            jumping = false;
         }
 
         private void Land() {
