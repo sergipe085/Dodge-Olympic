@@ -26,8 +26,13 @@ namespace Controllers
         }
 
         private void Update() {
-            HandleInput(CaptureInput());
+            CaptureInput();
+            HandleInput(curInput);
             ExtraGravity();
+        }
+
+        private void FixedUpdate() {
+            HandleFixedInput(curInput);
         }
 
         #endregion
@@ -42,8 +47,11 @@ namespace Controllers
         }
 
         private void HandleInput(PlayerInput input) {
-            Move(input.xMove);
             Jump(input.jump);
+        }
+
+        private void HandleFixedInput(PlayerInput input) {
+            Move(input.xMove);
         }
 
         #endregion
@@ -63,7 +71,7 @@ namespace Controllers
         }
 
         private void ExtraGravity() {
-            rig.AddForce(Vector3.down * gravity);
+            rig.AddForce(Vector3.down * gravity * Time.deltaTime);
         }
 
         #endregion
