@@ -108,6 +108,7 @@ namespace Controllers
             Vector3 pos;
             float time = 0f;
             DisableInput();
+            CameraController.instance.jumping = true;
 
             yield return new WaitForFixedUpdate();
 
@@ -115,11 +116,12 @@ namespace Controllers
                 float t = time/duration;
                 pos = Vector3.Lerp(start, end, t) + jumpCurve.Evaluate(t) * Vector3.up;
                 transform.position = pos;
-                time += Time.deltaTime;
+                time += Time.fixedDeltaTime;
                 yield return null;
             }
 
             EnableInput();
+            CameraController.instance.jumping = false;
         }
 
         private void Land() {
