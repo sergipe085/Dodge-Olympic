@@ -51,6 +51,7 @@ namespace Controllers
 
         void OnTriggerEnter(Collider other) {
             CheckJump(other);
+            CheckWin(other);
         }
 
         #endregion
@@ -65,6 +66,20 @@ namespace Controllers
             JumpPoint point = other.GetComponent<JumpPoint>();
             if (point && !jumping) {
                 StartCoroutine(JumpTest(transform.position, point.end.position, point.jumpDuration));
+            }
+        }
+
+        private void CheckWin(Collider other) {
+            if (other.CompareTag("Finish")) {
+                GameController.instance.GameOver(true);
+                DisableInput();
+
+                curInput.xMove = 0;
+                rig.velocity = Vector3.zero;
+                
+                animator.SetBool("run", false);
+                animator.SetTrigger("win");
+                animator.applyRootMotion = true;
             }
         }
 
@@ -163,7 +178,17 @@ namespace Controllers
             hips.gameObject.SetActive(true);
             animator.enabled = false;
             this.enabled = false;
+
+            Die();
             yield break;
+        }
+
+        #endregion
+        
+        #region Game
+
+        private void Die() {
+            GameController.instance.GameOver(false);
         }
 
         #endregion
