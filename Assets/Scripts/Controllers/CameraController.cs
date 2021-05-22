@@ -10,9 +10,10 @@ namespace Controllers
 
         [Header("FOLLOW PLAYER")]
         [SerializeField]
+        private Transform target = null;
+        [SerializeField]
         private float            followSpeed     = 10f;
         private Vector3          initialPosition = Vector3.zero;
-        private PlayerController player          = null;
 
         [Header("PLAYER JUMP BUG")]
         public bool jumping = false;
@@ -20,17 +21,16 @@ namespace Controllers
         private void Awake() {
             instance = this;
 
-            player = FindObjectOfType<PlayerController>();
         }
 
         private void Start() {
-            if (player != null) {
-                initialPosition = transform.position - player.transform.position;
+            if (target != null) {
+                initialPosition = transform.position - target.transform.position;
             }
         }
 
         private void LateUpdate() {
-            FollowTarget(player.transform);
+            FollowTarget(target.transform);
         }
 
         private void FollowTarget(Transform target) {

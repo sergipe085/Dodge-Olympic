@@ -566,6 +566,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 12, y: 1.9999999, z: 1.0000005}
   m_Center: {x: 0, y: -0.99999994, z: 0}
+--- !u!1 &446861176 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5912899612210429261, guid: 708cf58c0fb7019489d5060c77af8ef4,
+    type: 3}
+  m_PrefabInstance: {fileID: 531974228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &446861177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446861176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee73e1b6eac08d543b4dbe80e284bb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &476970489
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,6 +742,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 531974228}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &529944178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529944176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f29c74a637662894ab82ce9c9c1583a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &529944180
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -997,25 +1027,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432a0f9cb1600f84fb1ce56a3ad9f3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tiles: []
-  CreatedTiles: []
-  wallObjects: []
-  Wall: {fileID: 0}
-  TileAmount: 50
-  TileSize: 16
-  WallSize: 1
-  DownRandom: 0.75
-  RightRandom: 0.5
-  UpRandom: 0.25
-  MinY: 3.4028235e+38
-  MaxY: 0
-  MinX: 3.4028235e+38
-  MaxX: 0
-  AmountX: 0
-  AmountY: 0
-  ExtraWallY: 10
-  ExtraWallX: 10
-  GenerationSpeed: 0.01
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1517,25 +1528,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432a0f9cb1600f84fb1ce56a3ad9f3df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Tiles: []
-  CreatedTiles: []
-  wallObjects: []
-  Wall: {fileID: 0}
-  TileAmount: 50
-  TileSize: 16
-  WallSize: 1
-  DownRandom: 0.75
-  RightRandom: 0.5
-  UpRandom: 0.25
-  MinY: 3.4028235e+38
-  MaxY: 0
-  MinX: 3.4028235e+38
-  MaxX: 0
-  AmountX: 0
-  AmountY: 0
-  ExtraWallY: 10
-  ExtraWallX: 10
-  GenerationSpeed: 0.01
 --- !u!1 &1169018381
 GameObject:
   m_ObjectHideFlags: 0
@@ -2596,6 +2588,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 391745420}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &1933043521
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1933043520}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.19545746, y: 0.10712654, z: 1.8225151}
+  m_Center: {x: 0.010022456, y: 0.02233963, z: 0.76795644}
 --- !u!65 &1933043524
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2607,8 +2612,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.54951096, y: 0.6920872, z: 1.7969614}
-  m_Center: {x: 0.000000031634162, y: 0.018435655, z: 0.7807333}
+  m_Size: {x: 0.54951096, y: 0.6920872, z: 0.6258435}
+  m_Center: {x: 0.00000008143738, y: 0.018435664, z: 1.3662922}
 --- !u!1 &1943658347
 GameObject:
   m_ObjectHideFlags: 0

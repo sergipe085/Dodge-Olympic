@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Mechanics;
+using Traps;
 
 namespace Controllers 
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour 
     {   
         [Header("CORE")]
@@ -26,6 +26,9 @@ namespace Controllers
         private Rigidbody rig       = null;
         private Animator  animator  = null;
 
+        [Header("RAGDOLL")]
+        [SerializeField] private Transform hips = null;
+
         #region MonoBehaviour
 
         private void Awake() {
@@ -37,7 +40,6 @@ namespace Controllers
             if (!canInput) return;
 
             CaptureInput();
-            ExtraGravity();
             Land();
         }
 
@@ -110,9 +112,7 @@ namespace Controllers
         private IEnumerator JumpTest(Vector3 start, Vector3 end, float duration) {
             Vector3 pos;
             float time = 0f;
-            DisableInput();
-            CameraController.instance.jumping = true;
-            jumping = true;
+            StartJump();
 
             yield return new WaitForFixedUpdate();
 
@@ -124,6 +124,16 @@ namespace Controllers
                 yield return null;
             }
 
+            StopJump();
+        }
+
+        private void StartJump() {
+            DisableInput();
+            CameraController.instance.jumping = true;
+            jumping = true;
+        }
+
+        private void StopJump() {
             EnableInput();
             CameraController.instance.jumping = false;
             jumping = false;
@@ -140,8 +150,20 @@ namespace Controllers
             }
         }
 
-        private void ExtraGravity() {
-            rig.AddForce(Vector3.down * gravity * Time.deltaTime);
+        #endregion
+    
+        #region TrapInteraction
+
+        public IEnumerator TakeHit(Trap trap, Vector3 impactPoint) {
+            StopAllCoroutines();
+            StopJump();
+            DisableInput();
+
+            rig.isKinematic = true;
+            hips.gameObject.SetActive(true);
+            animator.enabled = false;
+            this.enabled = false;
+            yield break;
         }
 
         #endregion
